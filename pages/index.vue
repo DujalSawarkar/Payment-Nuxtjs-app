@@ -13,7 +13,7 @@
               <h2 class="text-2xl font-semibold text-green-500 mb-2">
                 Balance
               </h2>
-              <p class="text-3xl font-bold">$500</p>
+              <p class="text-3xl font-bold">${{ data?.balance }}</p>
             </div>
             <hr
               class="border-t border-gray-300 h-px w-20 mx-6 transform rotate-90"
@@ -33,14 +33,37 @@
   </div>
 </template>
 <script setup>
+import { ref } from "vue";
 const router = useRouter();
 let user;
-onMounted(() => {
+let data = ref({});
+onMounted(async () => {
   user = localStorage.getItem("userData");
   if (!localStorage.getItem("userData")) {
     router.push("/login");
   }
+  await fetchData();
+  // console.log(data);
 });
+
+// In your Vue component or utility file
+
+const fetchData = async () => {
+  try {
+    const response = await $fetch("http://localhost:4000/user", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${user}` },
+    });
+
+    if (!response) {
+      throw new Error("Network response was not ok");
+    }
+    data.value = response;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Propagate the error to the calling function/component
+  }
+};
 const options = [
   { value: "Expense", label: "Expense" },
   { value: "Transaction", label: "Transaction" },
