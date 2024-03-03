@@ -53,37 +53,76 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 interface User {
+  id: number;
   name: string;
   balance: number;
 }
 
-const users: User[] = [
-  { name: "User 1", balance: 1000 },
-  { name: "User 2", balance: 2000 },
-  { name: "User 3", balance: 3000 },
-];
-
+const users = ref<any>([]);
 const showAddMoneyModal = ref(false);
-const selectedUser = ref<User | null>(null);
+const selectedUser = ref<any>(null);
 const amountToAdd = ref(0);
+const router = useRouter();
+let admin;
+onMounted(async () => {
+  admin = localStorage.getItem("userData");
+  fetchUserData();
+});
+// Fetch user data
+const fetchUserData = async () => {
+  try {
+    const response = await $fetch("http://localhost:4000/admin", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${admin}` },
+    });
+    console.log(response);
 
+    if (!response) {
+      throw new Error("Failed to fetch user data");
+    }
+    users.value = await response;
+    // users.value = userData;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
+
+// Add money to the selected user
+const addMoney = async () => {
+  try {
+    if (selectedUser.value && amountToAdd.value > 0) {
+      const userId = selectedUser.value.id;
+      const response = await $fetch(`http://localhost:4000/admin/${userId}`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${admin}` },
+
+        body: { amount: amountToAdd.value },
+      });
+      if (!response) {
+        throw new Error("Failed to add money");
+      }
+      // Update user balance locally
+      selectedUser.value.balance += amountToAdd.value;
+      closeAddMoneyModal();
+    }
+  } catch (error) {
+    console.error("Error adding money:", error);
+  }
+};
+
+// Method to open add money modal
 const openAddMoneyModal = (user: User) => {
   selectedUser.value = user;
   showAddMoneyModal.value = true;
 };
 
+// Method to close add money modal
 const closeAddMoneyModal = () => {
   showAddMoneyModal.value = false;
   amountToAdd.value = 0;
-};
-
-const addMoney = () => {
-  if (selectedUser.value && amountToAdd.value > 0) {
-    selectedUser.value.balance += amountToAdd.value;
-    closeAddMoneyModal();
-  }
 };
 </script>

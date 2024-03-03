@@ -1,10 +1,12 @@
 <template>
+  <!-- <h1 class="w-[full] text-3xl">Make Transaction</h1> -->
   <el-select
     v-model="value"
     filterable
     placeholder="Select"
     style="width: 240px"
     @change="changeinput"
+    class="mr-28"
   >
     <el-option
       v-for="item in options"
@@ -14,8 +16,12 @@
     />
   </el-select>
 
-  <div v-if="compvalue === 'Transaction'">Transaction</div>
-  <div v-else class="w-[70%] m-12"><Expenses /></div>
+  <div v-if="compvalue === 'Transaction'" class="w-[80%] m-12 ml-12">
+    <Transaction />
+  </div>
+  <div v-else class="w-[80%] m-12 ml-12">
+    <Expenses />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -27,7 +33,7 @@ const props = defineProps({
     required: true,
   },
 });
-let compvalue = ref<string>(""); // Initialize compvalue as empty string
+let compvalue = ref<any>(""); // Initialize compvalue as empty string
 
 const changeinput = () => {
   compvalue.value = value.value; // Update compvalue directly

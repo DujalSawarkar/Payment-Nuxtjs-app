@@ -3,20 +3,31 @@
     <form @submit.prevent="submitForm">
       <div class="mb-4">
         <label class="block text-gray-700 text-lg font-bold mb-2" for="name">
-          Expense Name
+          Name of User
         </label>
-        <el-input
-          v-model="name"
-          class="appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          placeholder="Please input Name of Transaction"
-        />
+        <el-select
+          v-model="username"
+          filterable
+          allow-create
+          default-first-option
+          :reserve-keyword="false"
+          placeholder="Choose tags for your article"
+          style="width: 360px"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </div>
       <div class="mb-4">
         <label
           class="block text-gray-700 text-lg font-bold mb-2"
           for="description"
         >
-          Description
+          Payment Detail
         </label>
         <el-input
           v-model="description"
@@ -26,24 +37,6 @@
           placeholder="Please input Description"
         />
       </div>
-      <!-- <div class="mb-6 ml-2">
-        <label class="block text-gray-700 text-lg font-bold mb-2" for="amount">
-          Category of Transaction
-        </label>
-        <el-select
-          v-model="value"
-          filterable
-          placeholder="Select"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div> -->
 
       <div class="mb-6">
         <label class="block text-gray-700 text-lg font-bold mb-2" for="amount">
@@ -68,57 +61,68 @@
   </div>
 </template>
 
-<script setup>
-import { useRouter } from "vue-router";
-const router = useRouter();
-let user;
-const name = ref("");
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+
+const username = ref<string[]>([]);
 const amount = ref("");
 const description = ref("");
-import { ref, defineProps } from "vue";
+const options = ref([]);
+let user: any;
 
-// let compvalue = ref<string>(""); // Initialize compvalue as empty string
-// const value = ref<string[]>([]);
-
-// const options = [
-//   { value: "Expense", label: "Expense" },
-//   { value: "Transaction", label: "Transaction" },
-// ];
-
-onMounted(() => {
+onMounted(async () => {
   user = localStorage.getItem("userData");
+  await fetchUserData();
 });
+
+const fetchUserData = async () => {
+  try {
+    const response = await fetch("http://localhost:4000/user/all", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${user}`,
+      },
+    });
+
+    if (!response) {
+      throw new Error("Failed to fetch user data");
+    }
+
+    const userData = await response.json();
+    options.value = userData.map((user: any) => ({
+      value: user.id.toString(),
+      label: user.name,
+    }));
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+};
 
 const submitForm = async () => {
   const formData = {
-    name: name.value,
-    description: description.value,
-    // category: value.value,
     amount: amount.value,
+    name: username.value,
+    description: description.value,
   };
-  console.log(formData);
+
   try {
-    const response = await $fetch("http://localhost:4000/transaction", {
+    const response = await $fetch("http://localhost:4000/transaction/payment", {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${user}`,
       },
       body: formData,
     });
-    console.log("Transaction submitted successfully!");
+
+    if (!response) {
+      throw new Error("Failed to submit form data");
+    }
+
+    console.log("Form data submitted successfully!");
+    // Reset form fields if needed
   } catch (error) {
-    console.error("Error submitting transaction:", error);
-    // Handle error appropriately
+    console.error("Error submitting form data:", error);
   }
 };
-
-const props = defineProps({
-  newdata: {
-    type: Array,
-    required: true,
-  },
-});
-
-// const data = ref(props.newdata);
-// console.log(data);
 </script>

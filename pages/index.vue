@@ -3,12 +3,14 @@
     <div
       class="h-screen w-[100%] bg-slate-100 flex justify-center items-center"
     >
-      <div class="w-[90%] bg-white rounded-lg shadow-xl p-8">
-        <h1 class="text-3xl font-bold mb-8">Your Expenses</h1>
+      <div class="w-[100%] h-full bg-white rounded-lg shadow-xl p-8">
+        <h1 class="text-4xl font-bold mb-8">Your Transaction</h1>
 
         <!-- Balance and Expense section -->
         <div class="flex items-center gap-[10%] mb-12">
-          <div class="flex justify-evenly items-center w-[50%]">
+          <div
+            class="p-5 px flex justify-evenly items-center w-[100%] shadow-xl"
+          >
             <div class="flex flex-col items-center">
               <h2 class="text-2xl font-semibold text-green-500 mb-2">
                 Balance
@@ -16,7 +18,7 @@
               <p class="text-3xl font-bold">${{ data?.balance }}</p>
             </div>
             <hr
-              class="border-t border-gray-300 h-px w-20 mx-6 transform rotate-90"
+              class="border-t border-gray-300 w-12 mx-6 transform rotate-90"
             />
             <div class="flex flex-col items-center">
               <h2 class="text-2xl font-semibold text-red-500 mb-2">Expense</h2>
@@ -24,11 +26,19 @@
             </div>
           </div>
         </div>
-        <Timeline />
+        <div class="flex justify-center items-center gap-4">
+          <div><Timeline :initial-option="newdata" /></div>
+          <hr class="w-[150px] transform rotate-90" />
+          <div><UserTimeline :initial-option="newdata" /></div>
+        </div>
       </div>
     </div>
-    <div class="w-full flex flex-col items-center m-12">
-      <Input :initial-options="options" class="mt-4" />
+    <div class="w-full">
+      <h1 class="w-[full] text-4xl font-bold m-8">Make Transaction</h1>
+      <div class="w-full flex flex-col items-center m-4">
+        <!-- <Expenses :data="data.value" /> -->
+        <Input :initial-options="options" class="mt-4" />
+      </div>
     </div>
   </div>
 </template>
@@ -37,13 +47,14 @@ import { ref } from "vue";
 const router = useRouter();
 let user;
 let data = ref({});
+let newdata = ref({});
 onMounted(async () => {
   user = localStorage.getItem("userData");
   if (!localStorage.getItem("userData")) {
     router.push("/login");
   }
   await fetchData();
-  // console.log(data);
+  console.log(data);
 });
 
 // In your Vue component or utility file
@@ -59,11 +70,13 @@ const fetchData = async () => {
       throw new Error("Network response was not ok");
     }
     data.value = response;
+    newdata = response;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error; // Propagate the error to the calling function/component
   }
 };
+
 const options = [
   { value: "Expense", label: "Expense" },
   { value: "Transaction", label: "Transaction" },

@@ -13,6 +13,7 @@
     >
       {{ activity.content }}
       <p>Amount : ${{ activity.amount }}</p>
+      <p>For {{ activity.description }}</p>
     </el-timeline-item>
   </el-timeline>
 </template>
@@ -24,10 +25,13 @@ const activities = ref([]);
 
 const fetchTransactionHistory = async () => {
   try {
-    const response = await fetch("http://localhost:4000/transaction", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${user}` },
-    });
+    const response = await fetch(
+      "http://localhost:4000/transaction/usertouser",
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${user}` },
+      }
+    );
 
     // console.log(response);
     if (!response) {
@@ -39,6 +43,7 @@ const fetchTransactionHistory = async () => {
       content: item.name,
       timestamp: item.date,
       amount: item.amount,
+      description: item.description,
       size: Math.random() > 0.5 ? "large" : "medium",
       type: Math.random() > 0.5 ? "primary" : "success",
       icon: MoreFilled,

@@ -59,7 +59,7 @@ const handleSubmit = async () => {
         password: formData.value.password,
       },
     });
-
+    console.log(response);
     localStorage.setItem("userData", response.token);
     formData.value.email = "";
     formData.value.password = "";
