@@ -56,12 +56,14 @@
         />
       </div>
 
-      <div class="flex items-center justify-between ml-2">
-        <button
-          type="submit"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Submit
+      <div class="flex items-center justify-between ml-40">
+        <button type="submit">
+          <el-button
+            @click="open1"
+            class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Submit
+          </el-button>
         </button>
       </div>
     </form>
@@ -69,6 +71,15 @@
 </template>
 
 <script setup>
+import { ElNotification } from "element-plus";
+
+const open1 = () => {
+  ElNotification({
+    title: "Success",
+    message: "This is a success message",
+    type: "success",
+  });
+};
 import { useRouter } from "vue-router";
 const router = useRouter();
 let user;

@@ -44,12 +44,21 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
+import { ElNotification } from "element-plus";
 const formData = ref({
   email: "",
   password: "",
 });
-
+const open2 = () => {
+  ElNotification({
+    title: "Log Out",
+    message: "Log Out Succefully",  
+    type: "warning",
+  });
+};
+onMounted(() => {
+  open2();
+});
 const handleSubmit = async () => {
   try {
     const response = await $fetch("http://localhost:4000/auth/login", {

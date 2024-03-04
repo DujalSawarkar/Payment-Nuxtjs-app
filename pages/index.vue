@@ -26,9 +26,11 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-center items-center gap-4">
+        <div class="flex justify-center">
           <div><Timeline :initial-option="newdata" /></div>
-          <hr class="w-[150px] transform rotate-90" />
+          <div class="flex justify-center items-center">
+            <hr class="w-[190px] transform rotate-90" />
+          </div>
           <div><UserTimeline :initial-option="newdata" /></div>
         </div>
       </div>
@@ -41,6 +43,13 @@
       </div>
     </div>
   </div>
+  <button
+    v-if="user"
+    class="absolute top-5 right-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    @click="logoutHandler"
+  >
+    Log Out
+  </button>
 </template>
 <script setup>
 import { ref } from "vue";
@@ -55,8 +64,21 @@ onMounted(async () => {
   }
   await fetchData();
   console.log(data);
+  open1();
 });
+import { ElNotification } from "element-plus";
 
+const open1 = () => {
+  ElNotification({
+    title: "User",
+    message: "Login Succesfully",
+    type: "success",
+  });
+};
+const logoutHandler = () => {
+  localStorage.removeItem("userData");
+  router.push("/login");
+};
 // In your Vue component or utility file
 
 const fetchData = async () => {

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-3xl font-bold mt-8 mb-8">Your Expenses</h1>
+  <h1 class="text-3xl font-bold mt-8 mb-8">Your Transactions</h1>
   <el-timeline style="max-width: 600px">
     <el-timeline-item
       v-for="(activity, index) in activities"
@@ -11,7 +11,10 @@
       :hollow="activity.hollow"
       :timestamp="activity.timestamp"
     >
-      {{ activity.content }}
+      <p>
+        <span>{{ activity.Senderstatus }}</span> To : {{ activity.name }}
+      </p>
+
       <p>Amount : ${{ activity.amount }}</p>
       <p>For {{ activity.description }}</p>
     </el-timeline-item>
@@ -33,7 +36,7 @@ const fetchTransactionHistory = async () => {
       }
     );
 
-    // console.log(response);
+    console.log(response);
     if (!response) {
       throw new Error("Network response was not ok");
     }
@@ -43,6 +46,9 @@ const fetchTransactionHistory = async () => {
       content: item.name,
       timestamp: item.date,
       amount: item.amount,
+      name: item.name,
+      Receiverstatus: item.Receiverstatus,
+      Senderstatus: item.Senderstatus,
       description: item.description,
       size: Math.random() > 0.5 ? "large" : "medium",
       type: Math.random() > 0.5 ? "primary" : "success",

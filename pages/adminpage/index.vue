@@ -50,6 +50,13 @@
       </div>
     </div>
   </div>
+  <button
+    v-if="admin"
+    class="absolute top-5 right-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    @click="logoutHandler"
+  >
+    Log Out
+  </button>
 </template>
 
 <script setup lang="ts">
@@ -71,7 +78,21 @@ let admin;
 onMounted(async () => {
   admin = localStorage.getItem("userData");
   fetchUserData();
+  open1();
 });
+import { ElNotification } from "element-plus";
+
+const open1 = () => {
+  ElNotification({
+    title: "Admin",
+    message: "Login Succesfully",
+    type: "success",
+  });
+};
+const logoutHandler = () => {
+  localStorage.removeItem("userData");
+  router.push("/login");
+};
 // Fetch user data
 const fetchUserData = async () => {
   try {

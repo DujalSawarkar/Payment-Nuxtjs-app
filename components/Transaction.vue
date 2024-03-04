@@ -49,12 +49,14 @@
         />
       </div>
 
-      <div class="flex items-center justify-between ml-2">
-        <button
-          type="submit"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Submit
+      <div class="flex items-center justify-between ml-40">
+        <button type="submit" >
+          <el-button
+            @click="open1"
+            class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Submit
+          </el-button>
         </button>
       </div>
     </form>
@@ -63,7 +65,15 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { ElNotification } from "element-plus";
 
+const open1 = () => {
+  ElNotification({
+    title: "Success",
+    message: "Amount Transffered Succesfully",
+    type: "success",
+  });
+};
 const username = ref<string[]>([]);
 const amount = ref("");
 const description = ref("");
@@ -100,7 +110,7 @@ const fetchUserData = async () => {
 
 const submitForm = async () => {
   const formData = {
-    amount: amount.value,
+    amount: parseFloat(amount.value),
     name: username.value,
     description: description.value,
   };
@@ -114,6 +124,7 @@ const submitForm = async () => {
       },
       body: formData,
     });
+    console.log(response);
 
     if (!response) {
       throw new Error("Failed to submit form data");
