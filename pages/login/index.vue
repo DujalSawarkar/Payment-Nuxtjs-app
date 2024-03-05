@@ -44,7 +44,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-import { ElNotification } from "element-plus";
 const formData = ref({
   email: "",
   password: "",
@@ -52,7 +51,7 @@ const formData = ref({
 const open2 = () => {
   ElNotification({
     title: "Log Out",
-    message: "Log Out Succefully",  
+    message: "Log Out Succefully",
     type: "warning",
   });
 };
@@ -80,9 +79,17 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error("Error during login:", error);
   }
+  open1();
+};
+import { ElNotification } from "element-plus";
+const open1 = () => {
+  ElNotification({
+    title: "User",
+    message: "Login Succesfully",
+    type: "success",
+  });
 };
 </script>
-
 <style scoped>
 /* No scoped styles needed */
 </style>

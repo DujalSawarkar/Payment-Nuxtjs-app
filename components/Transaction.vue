@@ -50,7 +50,7 @@
       </div>
 
       <div class="flex items-center justify-between ml-40">
-        <button type="submit" >
+        <button type="submit">
           <el-button
             @click="open1"
             class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -103,6 +103,7 @@ const fetchUserData = async () => {
       value: user.id.toString(),
       label: user.name,
     }));
+    console.log(options);
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
@@ -114,6 +115,7 @@ const submitForm = async () => {
     name: username.value,
     description: description.value,
   };
+  console.log(formData);
 
   try {
     const response = await $fetch("http://localhost:4000/transaction/payment", {

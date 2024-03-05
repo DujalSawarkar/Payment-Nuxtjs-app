@@ -78,17 +78,17 @@ let admin;
 onMounted(async () => {
   admin = localStorage.getItem("userData");
   fetchUserData();
-  open1();
+  // open1();
 });
-import { ElNotification } from "element-plus";
+// import { ElNotification } from "element-plus";
 
-const open1 = () => {
-  ElNotification({
-    title: "Admin",
-    message: "Login Succesfully",
-    type: "success",
-  });
-};
+// const open1 = () => {
+//   ElNotification({
+//     title: "Admin",
+//     message: "Login Succesfully",
+//     type: "success",
+//   });
+// };
 const logoutHandler = () => {
   localStorage.removeItem("userData");
   router.push("/login");

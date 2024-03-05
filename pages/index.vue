@@ -22,7 +22,7 @@
             />
             <div class="flex flex-col items-center">
               <h2 class="text-2xl font-semibold text-red-500 mb-2">Expense</h2>
-              <p class="text-3xl font-bold">$200</p>
+              <p class="text-3xl font-bold">$0</p>
             </div>
           </div>
         </div>
@@ -66,15 +66,7 @@ onMounted(async () => {
   console.log(data);
   open1();
 });
-import { ElNotification } from "element-plus";
 
-const open1 = () => {
-  ElNotification({
-    title: "User",
-    message: "Login Succesfully",
-    type: "success",
-  });
-};
 const logoutHandler = () => {
   localStorage.removeItem("userData");
   router.push("/login");

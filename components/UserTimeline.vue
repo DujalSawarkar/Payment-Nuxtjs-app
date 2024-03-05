@@ -11,12 +11,11 @@
       :hollow="activity.hollow"
       :timestamp="activity.timestamp"
     >
-      <p>
-        <span>{{ activity.Senderstatus }}</span> To : {{ activity.name }}
-      </p>
+      <span>{{ activity.Senderstatus }}</span>
+      <!-- <p>To : {{ activity.name }}</p> -->
 
       <p>Amount : ${{ activity.amount }}</p>
-      <p>For {{ activity.description }}</p>
+      <!-- <p>For {{ activity.description }}</p> -->
     </el-timeline-item>
   </el-timeline>
 </template>
@@ -36,12 +35,12 @@ const fetchTransactionHistory = async () => {
       }
     );
 
-    console.log(response);
+    // console.log(response);
     if (!response) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    console.log(data);
+    console.log("Data for user to user", data);
     activities.value = data.map((item) => ({
       content: item.name,
       timestamp: item.date,
