@@ -8,11 +8,12 @@
         <el-select
           v-model="username"
           filterable
-          allow-create
-          default-first-option
-          :reserve-keyword="false"
-          placeholder="Choose tags for your article"
-          style="width: 360px"
+          remote
+          reserve-keyword
+          placeholder="Please enter a keyword"
+          :remote-method="remoteMethod"
+          :loading="loading"
+          style="width: 240px"
         >
           <el-option
             v-for="item in options"
@@ -64,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { ElNotification } from "element-plus";
 
 const open1 = () => {
@@ -79,31 +80,45 @@ const amount = ref("");
 const description = ref("");
 const options = ref([]);
 let user: any;
+interface IUserData {}
 
+let userData: IUserData[] = [];
 onMounted(async () => {
   user = localStorage.getItem("userData");
-  await fetchUserData();
+  // await fetchUserData();
 });
+console.log(username);
 
-const fetchUserData = async () => {
+watch(username, (newValue, oldValue) => {
+  console.log(username);
+});
+const remoteMethod = async (query: string) => {
+  if (query.length >= 3) await fetchUserData(query);
+};
+const fetchUserData = async (searchID: string) => {
   try {
-    const response = await fetch("http://localhost:4000/user/all", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${user}`,
-      },
-    });
+    if (searchID.length >= 3) {
+      const response = await fetch(
+        `http://localhost:4000/user/search?keyword=${searchID}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${user}`,
+          },
+        }
+      );
 
-    if (!response) {
-      throw new Error("Failed to fetch user data");
+      userData = await response.json();
+
+      console.log(userData);
+
+      options.value = userData.map((user: any) => ({
+        value: user.id.toString(),
+        label: user.name,
+      }));
+    } else {
+      return;
     }
-
-    const userData = await response.json();
-    options.value = userData.map((user: any) => ({
-      value: user.id.toString(),
-      label: user.name,
-    }));
-    console.log(options);
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
@@ -112,10 +127,10 @@ const fetchUserData = async () => {
 const submitForm = async () => {
   const formData = {
     amount: parseFloat(amount.value),
-    name: username.value,
+    receiverId: username.value,
     description: description.value,
   };
-  console.log(formData);
+  // console.log(formData);
 
   try {
     const response = await $fetch("http://localhost:4000/transaction/payment", {
@@ -131,9 +146,6 @@ const submitForm = async () => {
     if (!response) {
       throw new Error("Failed to submit form data");
     }
-
-    console.log("Form data submitted successfully!");
-    // Reset form fields if needed
   } catch (error) {
     console.error("Error submitting form data:", error);
   }

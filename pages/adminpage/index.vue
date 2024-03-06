@@ -74,10 +74,13 @@ const showAddMoneyModal = ref(false);
 const selectedUser = ref<any>(null);
 const amountToAdd = ref(0);
 const router = useRouter();
-let admin;
+let admin: any;
 onMounted(async () => {
   admin = localStorage.getItem("userData");
   fetchUserData();
+  if (!localStorage.getItem("userData")) {
+    router.push("/");
+  }
   // open1();
 });
 // import { ElNotification } from "element-plus";
@@ -91,7 +94,7 @@ onMounted(async () => {
 // };
 const logoutHandler = () => {
   localStorage.removeItem("userData");
-  router.push("/login");
+  router.push("/");
 };
 // Fetch user data
 const fetchUserData = async () => {

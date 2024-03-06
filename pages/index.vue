@@ -1,98 +1,97 @@
-<template>
-  <div class="flex">
-    <div
-      class="h-screen w-[100%] bg-slate-100 flex justify-center items-center"
-    >
-      <div class="w-[100%] h-full bg-white rounded-lg shadow-xl p-8">
-        <h1 class="text-4xl font-bold mb-8">Your Transaction</h1>
+<!-- actual -->
 
-        <!-- Balance and Expense section -->
-        <div class="flex items-center gap-[10%] mb-12">
-          <div
-            class="p-5 px flex justify-evenly items-center w-[100%] shadow-xl"
+<template>
+  <div class="flex justify-center items-center h-screen bg-gray-200">
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div>
+          <label for="email" class="block font-semibold">Email:</label>
+          <input
+            type="email"
+            id="email"
+            v-model="formData.email"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div>
+          <label for="password" class="block font-semibold">Password:</label>
+          <input
+            type="password"
+            id="password"
+            v-model="formData.password"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded"
+          />
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-300"
+        >
+          Login
+        </button>
+        <div class="text-center">
+          <span class="text-gray-700">Not registered?</span>
+          <nuxt-link to="/signup" class="text-blue-500 hover:underline"
+            >Create an account</nuxt-link
           >
-            <div class="flex flex-col items-center">
-              <h2 class="text-2xl font-semibold text-green-500 mb-2">
-                Balance
-              </h2>
-              <p class="text-3xl font-bold">${{ data?.balance }}</p>
-            </div>
-            <hr
-              class="border-t border-gray-300 w-12 mx-6 transform rotate-90"
-            />
-            <div class="flex flex-col items-center">
-              <h2 class="text-2xl font-semibold text-red-500 mb-2">Expense</h2>
-              <p class="text-3xl font-bold">$0</p>
-            </div>
-          </div>
         </div>
-        <div class="flex justify-center">
-          <div><Timeline :initial-option="newdata" /></div>
-          <div class="flex justify-center items-center">
-            <hr class="w-[190px] transform rotate-90" />
-          </div>
-          <div><UserTimeline :initial-option="newdata" /></div>
-        </div>
-      </div>
-    </div>
-    <div class="w-full">
-      <h1 class="w-[full] text-4xl font-bold m-8">Make Transaction</h1>
-      <div class="w-full flex flex-col items-center m-4">
-        <!-- <Expenses :data="data.value" /> -->
-        <Input :initial-options="options" class="mt-4" />
-      </div>
+      </form>
     </div>
   </div>
-  <button
-    v-if="user"
-    class="absolute top-5 right-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-    @click="logoutHandler"
-  >
-    Log Out
-  </button>
 </template>
+
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+
 const router = useRouter();
-let user;
-let data = ref({});
-let newdata = ref({});
-onMounted(async () => {
-  user = localStorage.getItem("userData");
-  if (!localStorage.getItem("userData")) {
-    router.push("/login");
-  }
-  await fetchData();
-  console.log(data);
-  open1();
+const formData = ref({
+  email: "",
+  password: "",
 });
-
-const logoutHandler = () => {
-  localStorage.removeItem("userData");
-  router.push("/login");
+const open2 = () => {
+  ElNotification({
+    title: "Log Out",
+    message: "Log Out Succefully",
+    type: "warning",
+  });
 };
-// In your Vue component or utility file
-
-const fetchData = async () => {
+onMounted(() => {
+  // open2();
+});
+const handleSubmit = async () => {
   try {
-    const response = await $fetch("http://localhost:4000/user", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${user}` },
+    const response = await $fetch("http://localhost:4000/auth/login", {
+      method: "POST",
+      body: {
+        email: formData.value.email,
+        password: formData.value.password,
+      },
     });
-
-    if (!response) {
-      throw new Error("Network response was not ok");
+    console.log(response);
+    localStorage.setItem("userData", response.token);
+    formData.value.email = "";
+    formData.value.password = "";
+    if (response.role == "admin") {
+      router.push("/adminpage");
+    } else {
+      router.push("/dashboard");
     }
-    data.value = response;
-    newdata = response;
+    open1();
   } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error; // Propagate the error to the calling function/component
+    console.error("Error during login:", error);
   }
 };
-
-const options = [
-  { value: "Expense", label: "Expense" },
-  { value: "Transaction", label: "Transaction" },
-];
+import { ElNotification } from "element-plus";
+const open1 = () => {
+  ElNotification({
+    title: "User",
+    message: "Login Succesfully",
+    type: "success",
+  });
+};
 </script>
+<style scoped>
+/* No scoped styles needed */
+</style>

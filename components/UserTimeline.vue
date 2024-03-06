@@ -23,6 +23,13 @@
 <script setup>
 import { MoreFilled } from "@element-plus/icons-vue";
 import { ref, onMounted } from "vue";
+
+let user;
+onMounted(() => {
+  user = localStorage.getItem("userData");
+  fetchTransactionHistory();
+});
+
 const activities = ref([]);
 
 const fetchTransactionHistory = async () => {
@@ -69,9 +76,4 @@ const getRandomColor = () => {
   }
   return color;
 };
-let user;
-onMounted(() => {
-  user = localStorage.getItem("userData");
-  fetchTransactionHistory();
-});
 </script>

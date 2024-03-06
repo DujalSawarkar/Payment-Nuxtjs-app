@@ -52,7 +52,7 @@
       </button>
       <div class="mt-4 text-center">
         Already registered?
-        <a href="/login" class="text-blue-500 hover:underline">Login</a>
+        <a href="/" class="text-blue-500 hover:underline">Login</a>
       </div>
     </form>
   </div>
@@ -87,7 +87,7 @@ const handleSubmit = async () => {
     console.log(formData.value);
     console.log(response);
 
-    router.push("/login");
+    router.push("/");
   } catch (error) {
     console.error("Error during signup:", error);
   }
