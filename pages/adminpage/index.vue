@@ -94,8 +94,23 @@ onMounted(async () => {
 // };
 const logoutHandler = () => {
   localStorage.removeItem("userData");
+  localStorage.removeItem("role");
   router.push("/");
 };
+
+onBeforeMount(() => {
+  if (localStorage.getItem("userData") && localStorage.getItem("role")) {
+    if (localStorage.getItem("role") === "admin") {
+      router.push("/adminpage");
+    } else if (localStorage.getItem("role") === "user") {
+      router.push("/dashboard");
+    } else {
+      router.push("/");
+    }
+  }
+
+  // ("first");
+});
 // Fetch user data
 const fetchUserData = async () => {
   try {
@@ -103,7 +118,7 @@ const fetchUserData = async () => {
       method: "GET",
       headers: { Authorization: `Bearer ${admin}` },
     });
-    console.log(response);
+    // (response);
 
     if (!response) {
       throw new Error("Failed to fetch user data");

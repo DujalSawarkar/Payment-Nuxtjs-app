@@ -63,7 +63,19 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+onBeforeMount(() => {
+  if (localStorage.getItem("userData") && localStorage.getItem("role")) {
+    if (localStorage.getItem("role") === "admin") {
+      router.push("/adminpage");
+    } else if (localStorage.getItem("role") === "user") {
+      router.push("/dashboard");
+    } else {
+      router.push("/");
+    }
+  }
 
+  ("first");
+});
 // Define reactive variables using ref
 const formData = ref({
   name: "",
@@ -71,6 +83,7 @@ const formData = ref({
   password: "",
   role: "",
 });
+let role;
 
 const handleSubmit = async () => {
   try {
@@ -84,10 +97,20 @@ const handleSubmit = async () => {
       }),
     });
 
-    console.log(formData.value);
-    console.log(response);
+    // (formData.value);
+    response;
 
-    router.push("/");
+    localStorage.setItem("userData", response.token);
+    localStorage.setItem("role", response.role);
+    if (localStorage.getItem("userData") && localStorage.getItem("role")) {
+      if (localStorage.getItem("role") === "admin") {
+        router.push("/adminpage");
+      } else if (localStorage.getItem("role") === "user") {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
+    }
   } catch (error) {
     console.error("Error during signup:", error);
   }

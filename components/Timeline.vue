@@ -29,12 +29,12 @@ const fetchTransactionHistory = async () => {
       headers: { Authorization: `Bearer ${user}` },
     });
 
-    // console.log(response);
+    // (response);
     if (!response) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    console.log(data);
+    data;
     activities.value = data.map((item) => ({
       content: item.name,
       timestamp: item.date,
@@ -45,7 +45,7 @@ const fetchTransactionHistory = async () => {
       color: getRandomColor(),
       hollow: Math.random() > 0.5,
     }));
-    console.log(activities.value);
+    activities.value;
   } catch (error) {
     console.error("Error fetching transaction history:", error);
   }

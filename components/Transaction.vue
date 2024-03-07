@@ -51,9 +51,8 @@
       </div>
 
       <div class="flex items-center justify-between ml-40">
-        <button type="submit">
+        <button type="submit" @click="$emit('myEvent')">
           <el-button
-            @click="open1"
             class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Submit
@@ -68,11 +67,18 @@
 import { ref, onMounted, watch } from "vue";
 import { ElNotification } from "element-plus";
 
-const open1 = () => {
+const succesToast = () => {
   ElNotification({
     title: "Success",
     message: "Amount Transffered Succesfully",
     type: "success",
+  });
+};
+const errorToast = () => {
+  ElNotification({
+    title: "Failed",
+    message: "Insufficient Balance",
+    type: "error",
   });
 };
 const username = ref<string[]>([]);
@@ -87,10 +93,10 @@ onMounted(async () => {
   user = localStorage.getItem("userData");
   // await fetchUserData();
 });
-console.log(username);
+username;
 
 watch(username, (newValue, oldValue) => {
-  console.log(username);
+  username;
 });
 const remoteMethod = async (query: string) => {
   if (query.length >= 3) await fetchUserData(query);
@@ -110,7 +116,7 @@ const fetchUserData = async (searchID: string) => {
 
       userData = await response.json();
 
-      console.log(userData);
+      userData;
 
       options.value = userData.map((user: any) => ({
         value: user.id.toString(),
@@ -130,7 +136,7 @@ const submitForm = async () => {
     receiverId: username.value,
     description: description.value,
   };
-  // console.log(formData);
+  // (formData);
 
   try {
     const response = await $fetch("http://localhost:4000/transaction/payment", {
@@ -141,13 +147,19 @@ const submitForm = async () => {
       },
       body: formData,
     });
-    console.log(response);
+
+    succesToast();
 
     if (!response) {
       throw new Error("Failed to submit form data");
     }
   } catch (error) {
     console.error("Error submitting form data:", error);
+    errorToast();
   }
+
+  username.value = "";
+  amount.value = "";
+  description.value = "";
 };
 </script>

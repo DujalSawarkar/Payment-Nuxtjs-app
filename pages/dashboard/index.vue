@@ -19,13 +19,13 @@
               </h2>
               <p class="text-3xl font-bold">${{ data?.balance }}</p>
             </div>
-            <hr
+            <!-- <hr
               class="border-t border-gray-300 w-12 mx-6 transform rotate-90"
-            />
-            <div class="flex flex-col items-center">
+            /> -->
+            <!-- <div class="flex flex-col items-center">
               <h2 class="text-2xl font-semibold text-red-500 mb-2">Expense</h2>
               <p class="text-3xl font-bold">$0</p>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="flex justify-center">
@@ -59,18 +59,22 @@ const router = useRouter();
 let user;
 let data = ref({});
 let newdata = ref({});
+
+
+
 onMounted(async () => {
   user = localStorage.getItem("userData");
   if (!localStorage.getItem("userData")) {
     router.push("/");
   }
   await fetchData();
-  console.log(data);
+  // (data);
   // open1();
 });
 
 const logoutHandler = () => {
   localStorage.removeItem("userData");
+  localStorage.removeItem("role");
   router.push("/");
 };
 // In your Vue component or utility file

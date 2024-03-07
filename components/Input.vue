@@ -17,7 +17,7 @@
   </el-select>
 
   <div v-if="compvalue === 'Transaction'" class="w-[80%] m-12 ml-12">
-    <Transaction />
+    <Transaction @my-event="Action" />
   </div>
   <div v-else class="w-[80%] m-12 ml-12">
     <Expenses />
@@ -26,7 +26,11 @@
 
 <script lang="ts" setup>
 import { ref, defineProps } from "vue";
+//
 
+function Action() {
+  console.log("emit event");
+}
 const props = defineProps({
   initialOptions: {
     type: Array,
@@ -37,10 +41,10 @@ let compvalue = ref<any>(""); // Initialize compvalue as empty string
 
 const changeinput = () => {
   compvalue.value = value.value; // Update compvalue directly
-  console.log(compvalue.value); // Log for verification
+  compvalue.value; // Log for verification
 };
 
 const value = ref<string[]>([]);
 const options = ref(props.initialOptions);
-console.log(options.value); // Log options for verification
+options.value; // Log options for verification
 </script>

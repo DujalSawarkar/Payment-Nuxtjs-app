@@ -57,8 +57,24 @@ const open2 = () => {
     type: "warning",
   });
 };
-onMounted(() => {
-  // open2();
+
+let role;
+// onMounted(() => {
+
+// });
+
+onBeforeMount(() => {
+  role = localStorage.getItem("role");
+  role;
+  if (role == "admin") {
+    router.push("/adminpage");
+  }
+  if (role == "user") {
+    router.push("/dashboard");
+  } else {
+    router.push("/");
+  }
+  ("hiii");
 });
 const handleSubmit = async () => {
   try {
@@ -69,9 +85,11 @@ const handleSubmit = async () => {
         password: formData.value.password,
       },
     });
-    console.log(response);
-    localStorage.setItem("userData", response.token);
+    response.role;
+
     formData.value.email = "";
+    localStorage.setItem("userData", response.token);
+    localStorage.setItem("role", response.role);
     formData.value.password = "";
     if (response.role == "admin") {
       router.push("/adminpage");
@@ -92,6 +110,4 @@ const open1 = () => {
   });
 };
 </script>
-<style scoped>
-/* No scoped styles needed */
-</style>
+<style scoped></style>

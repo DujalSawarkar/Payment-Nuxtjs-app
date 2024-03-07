@@ -88,14 +88,6 @@ const amount = ref("");
 const description = ref("");
 import { ref, defineProps } from "vue";
 
-// let compvalue = ref<string>(""); // Initialize compvalue as empty string
-// const value = ref<string[]>([]);
-
-// const options = [
-//   { value: "Expense", label: "Expense" },
-//   { value: "Transaction", label: "Transaction" },
-// ];
-
 onMounted(() => {
   user = localStorage.getItem("userData");
 });
@@ -107,7 +99,7 @@ const submitForm = async () => {
     // category: value.value,
     amount: amount.value,
   };
-  console.log(formData);
+  formData;
   try {
     const response = await $fetch("http://localhost:4000/transaction", {
       method: "POST",
@@ -116,7 +108,10 @@ const submitForm = async () => {
       },
       body: formData,
     });
-    console.log("Transaction submitted successfully!");
+    ("Transaction submitted successfully!");
+    name.value = "";
+    description.value = "";
+    amount.value = "";
   } catch (error) {
     console.error("Error submitting transaction:", error);
     // Handle error appropriately
@@ -131,5 +126,5 @@ const props = defineProps({
 });
 
 // const data = ref(props.newdata);
-// console.log(data);
+// (data);
 </script>
