@@ -96,7 +96,7 @@ const submitForm = async () => {
   const formData = {
     name: name.value,
     description: description.value,
-    // category: value.value,
+
     amount: amount.value,
   };
   formData;
