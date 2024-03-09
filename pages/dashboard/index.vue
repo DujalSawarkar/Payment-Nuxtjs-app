@@ -54,20 +54,30 @@
   </button>
 </template>
 <script setup>
-import { ref } from "vue";
+import { useDataStore } from "~/store/useStore";
+import { ref, onMounted } from "vue";
 const router = useRouter();
 let user;
 let data = ref({});
-let newdata = ref({});
-
-
-
+// let newdata = ref({});
+// const { userdata, error } = useDataStore();
+const store = useDataStore();
 onMounted(async () => {
   user = localStorage.getItem("userData");
   if (!localStorage.getItem("userData")) {
     router.push("/");
   }
-  await fetchData();
+
+  try {
+    // console.log(user);
+    await store.fetchData(user);
+    data.value = store.userdata;
+    console.log(data.value);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+
+  // await fetchData();
   // (data);
   // open1();
 });
@@ -79,23 +89,23 @@ const logoutHandler = () => {
 };
 // In your Vue component or utility file
 
-const fetchData = async () => {
-  try {
-    const response = await $fetch("http://localhost:4000/user", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${user}` },
-    });
+// const fetchData = async () => {
+//   try {
+//     const response = await $fetch("http://localhost:4000/user", {
+//       method: "GET",
+//       headers: { Authorization: `Bearer ${user}` },
+//     });
 
-    if (!response) {
-      throw new Error("Network response was not ok");
-    }
-    data.value = response;
-    newdata = response;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error; // Propagate the error to the calling function/component
-  }
-};
+//     if (!response) {
+//       throw new Error("Network response was not ok");
+//     }
+//     data.value = response;
+//     newdata = response;
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     throw error; // Propagate the error to the calling function/component
+//   }
+// };
 
 const options = [
   { value: "Expense", label: "Expense" },
