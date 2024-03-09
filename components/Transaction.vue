@@ -93,11 +93,7 @@ onMounted(async () => {
   user = localStorage.getItem("userData");
   // await fetchUserData();
 });
-username;
 
-watch(username, (newValue, oldValue) => {
-  username;
-});
 const remoteMethod = async (query: string) => {
   if (query.length >= 3) await fetchUserData(query);
 };
@@ -116,7 +112,7 @@ const fetchUserData = async (searchID: string) => {
 
       userData = await response.json();
 
-      userData;
+    
 
       options.value = userData.map((user: any) => ({
         value: user.id.toString(),

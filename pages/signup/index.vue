@@ -73,10 +73,9 @@ onBeforeMount(() => {
       router.push("/");
     }
   }
-
-  ("first");
 });
-// Define reactive variables using ref
+
+
 const formData = ref({
   name: "",
   email: "",
