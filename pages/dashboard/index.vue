@@ -1,7 +1,7 @@
 <!-- home -->
 
 <template>
-  <div class="flex">
+  <div class="flex" :key="data?.balance">
     <div
       class="h-screen w-[100%] bg-slate-100 flex justify-center items-center"
     >
@@ -41,7 +41,11 @@
       <h1 class="w-[full] text-4xl font-bold m-8">Make Transaction</h1>
       <div class="w-full flex flex-col items-center m-4">
         <!-- <Expenses :data="data.value" /> -->
-        <Input :initial-options="options" class="mt-4" />
+        <Input
+          :initial-options="options"
+          class="mt-4"
+          @customEvent="handleCustomEvent"
+        />
       </div>
     </div>
   </div>
@@ -68,20 +72,27 @@ onMounted(async () => {
     router.push("/");
   }
 
-  try {
-    // console.log(user);
-    await store.fetchData(user);
-    data.value = store.userdata;
-    console.log(data.value);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+  handleCustomEvent();
 
   // await fetchData();
   // (data);
   // open1();
 });
+const handleCustomEvent = async () => {
+  console.log("2nd emit");
+  try {
+    // console.log(user);
+    await store.fetchData(user);
+    data.value = store.userdata;
 
+    window.reload();
+    console.log(data.value);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+
+  // console.log(data.value);
+};
 const logoutHandler = () => {
   localStorage.removeItem("userData");
   localStorage.removeItem("role");

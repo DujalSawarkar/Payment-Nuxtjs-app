@@ -66,6 +66,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch } from "vue";
 import { ElNotification } from "element-plus";
+import { useDataStore } from "~/store/useStore";
 
 const succesToast = () => {
   ElNotification({
@@ -112,8 +113,6 @@ const fetchUserData = async (searchID: string) => {
 
       userData = await response.json();
 
-    
-
       options.value = userData.map((user: any) => ({
         value: user.id.toString(),
         label: user.name,
@@ -125,6 +124,7 @@ const fetchUserData = async (searchID: string) => {
     console.error("Error fetching user data:", error);
   }
 };
+const store = useDataStore();
 
 const submitForm = async () => {
   const formData = {
@@ -153,6 +153,15 @@ const submitForm = async () => {
     console.error("Error submitting form data:", error);
     errorToast();
   }
+
+  // try {
+  //   // console.log(user);
+  //   await store.fetchData(user);
+  //   // data.value = store.userdata;
+  //   // console.log(data.value);
+  // } catch (error) {
+  //   console.error("Error fetching data:", error);
+  // }
 
   username.value = "";
   amount.value = "";

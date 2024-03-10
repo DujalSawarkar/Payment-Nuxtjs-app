@@ -27,9 +27,10 @@
 <script lang="ts" setup>
 import { ref, defineProps } from "vue";
 //
-
+const emit = defineEmits(["customEvent"]);
 function Action() {
   console.log("emit event");
+  emit("customEvent");
 }
 const props = defineProps({
   initialOptions: {
