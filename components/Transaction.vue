@@ -1,8 +1,11 @@
 <template>
   <div class="bg-white shadow-2xl rounded px-8 pt-6 pb-8 mb-4 w-[80%]">
     <form @submit.prevent="submitForm">
-      <div class="mb-4">
-        <label class="block text-gray-700 text-lg font-bold mb-2" for="name">
+      <div class="mb-4 w-[full] mr-3">
+        <label
+          class="block text-gray-700 text-lg font-bold mb-2 w-[full]"
+          for="name"
+        >
           Name of User
         </label>
         <el-select
@@ -13,7 +16,7 @@
           placeholder="Please enter a keyword"
           :remote-method="remoteMethod"
           :loading="loading"
-          style="width: 240px"
+          style="width: 100%"
         >
           <el-option
             v-for="item in options"

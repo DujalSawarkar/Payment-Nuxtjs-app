@@ -2,9 +2,7 @@
 
 <template>
   <div class="flex" :key="data?.balance">
-    <div
-      class="h-screen w-[100%] bg-slate-100 flex justify-center items-center"
-    >
+    <div class="w-[100%] bg-slate-100 flex justify-center items-center">
       <div class="w-[100%] h-full bg-white rounded-lg shadow-xl p-8">
         <h1 class="text-4xl font-bold mb-8">Your Transaction</h1>
 
@@ -19,13 +17,6 @@
               </h2>
               <p class="text-3xl font-bold">${{ data?.balance }}</p>
             </div>
-            <!-- <hr
-              class="border-t border-gray-300 w-12 mx-6 transform rotate-90"
-            /> -->
-            <!-- <div class="flex flex-col items-center">
-              <h2 class="text-2xl font-semibold text-red-500 mb-2">Expense</h2>
-              <p class="text-3xl font-bold">$0</p>
-            </div> -->
           </div>
         </div>
         <div class="flex justify-center">
